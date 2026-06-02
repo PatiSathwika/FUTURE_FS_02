@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mini CRM — Lead Detail</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📊</text></svg>" />
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/dashboard.css" />
+</head>
+<body>
+
+<div class="app-layout" id="app-layout">
+
+  <!-- ═══════════════════════════════════════
+       SIDEBAR
+       ═══════════════════════════════════════ -->
+  <aside class="sidebar" id="sidebar">
+    <a href="/dashboard.html" class="sidebar-brand">
+      <div class="sidebar-brand-icon">📊</div>
+      <div class="sidebar-brand-text">
+        <span class="title">Mini CRM</span>
+        <span class="subtitle">Lead Manager</span>
+      </div>
+    </a>
+    <nav class="sidebar-nav">
+      <span class="nav-section-label">Main</span>
+      <a href="/dashboard.html" class="nav-link">
+        <span class="nav-link-icon">🏠</span>
+        <span class="nav-link-text">Dashboard</span>
+      </a>
+      <a href="/leads.html" class="nav-link active">
+        <span class="nav-link-icon">👥</span>
+        <span class="nav-link-text">All Leads</span>
+      </a>
+      <a href="/add-lead.html" class="nav-link">
+        <span class="nav-link-icon">➕</span>
+        <span class="nav-link-text">Add Lead</span>
+      </a>
+      <span class="nav-section-label">Pipeline</span>
+      <a href="/leads.html?status=New" class="nav-link">
+        <span class="nav-link-icon">🆕</span>
+        <span class="nav-link-text">New Leads</span>
+      </a>
+      <a href="/leads.html?status=Contacted" class="nav-link">
+        <span class="nav-link-icon">📞</span>
+        <span class="nav-link-text">Contacted</span>
+      </a>
+      <a href="/leads.html?status=Converted" class="nav-link">
+        <span class="nav-link-icon">✅</span>
+        <span class="nav-link-text">Converted</span>
+      </a>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="sidebar-user">
+        <div class="avatar avatar-md" id="sidebar-avatar">A</div>
+        <div class="sidebar-user-info">
+          <div class="sidebar-user-name" id="sidebar-user-name">Admin</div>
+          <div class="sidebar-user-role" id="sidebar-user-role">Admin</div>
+        </div>
+        <button class="sidebar-logout" onclick="logout()" title="Logout">🚪</button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ═══════════════════════════════════════
+       TOPBAR
+       ═══════════════════════════════════════ -->
+  <header class="topbar">
+    <button class="sidebar-toggle" id="sidebar-toggle" aria-label="Toggle sidebar">☰</button>
+    <span class="topbar-title" id="topbar-lead-name">Lead Detail</span>
+    <div class="topbar-actions">
+      <a href="/leads.html" class="btn btn-secondary btn-sm">← All Leads</a>
+      <a href="#" id="edit-lead-btn" class="btn btn-primary btn-sm">✏️ Edit</a>
+      <button class="topbar-btn" onclick="logout()" title="Logout">🚪</button>
+    </div>
+  </header>
+
+  <!-- ═══════════════════════════════════════
+       MAIN CONTENT
+       ═══════════════════════════════════════ -->
+  <main class="main-content">
+
+    <!-- Loading state -->
+    <div id="page-loading">
+      <div class="lead-detail-grid">
+        <div>
+          <div class="skeleton" style="height:160px;border-radius:14px;margin-bottom:20px"></div>
+          <div class="skeleton" style="height:200px;border-radius:14px"></div>
+        </div>
+        <div class="skeleton" style="height:480px;border-radius:14px"></div>
+      </div>
+    </div>
+
+    <!-- Main content — hidden until data loads -->
+    <div id="page-content" class="hidden">
+
+      <!-- Page header -->
+      <div class="page-header">
+        <div class="page-header-left">
+          <h1 id="detail-lead-name">Lead</h1>
+          <p id="detail-lead-meta" class="text-muted text-sm"></p>
+        </div>
+        <div class="page-header-actions">
+          <button class="btn btn-secondary btn-sm"
+                  id="delete-lead-btn"
+                  onclick="showDeleteModal()">
+            🗑️ Delete
+          </button>
+          <a href="#" id="edit-lead-link" class="btn btn-primary btn-sm">
+            ✏️ Edit Lead
+          </a>
+        </div>
+      </div>
+
+      <div class="lead-detail-grid">
+
+        <!-- ══ LEFT COLUMN ══════════════════════ -->
+        <div>
+
+          <!-- Profile Card -->
+          <div class="lead-profile-card" style="margin-bottom:20px">
+            <div class="lead-profile-header">
+              <div class="lead-profile-avatar" id="detail-avatar">?</div>
+              <div class="lead-profile-info">
+                <div class="lead-profile-name" id="profile-name">—</div>
+                <div class="lead-profile-company" id="profile-company"></div>
+                <div class="lead-profile-badges" id="profile-badges"></div>
+              </div>
+            </div>
+
+            <!-- Contact info grid -->
+            <div class="lead-info-grid" id="contact-info-grid">
+              <!-- Populated by JS -->
+            </div>
+          </div>
+
+          <!-- Status Updater -->
+          <div class="form-section" style="margin-bottom:20px">
+            <h3 class="form-section-title">
+              <span class="form-section-icon">🔄</span>
+              Update Status
+            </h3>
+            <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+              <select id="status-select" class="status-select-inline">
+                <option value="New">🆕 New</option>
+                <option value="Contacted">📞 Contacted</option>
+                <option value="Qualified">⭐ Qualified</option>
+                <option value="Converted">✅ Converted</option>
+                <option value="Lost">❌ Lost</option>
+              </select>
+              <button class="btn btn-primary btn-sm"
+                      id="update-status-btn"
+                      onclick="updateStatus()">
+                Save Status
+              </button>
+              <span id="status-update-msg"
+                    style="font-size:var(--text-xs);color:var(--success);
+                           display:none">
+                ✅ Status updated!
+              </span>
+            </div>
+          </div>
+
+          <!-- Description -->
+          <div class="form-section" id="description-section"
+               style="display:none;margin-bottom:20px">
+            <h3 class="form-section-title">
+              <span class="form-section-icon">📝</span>
+              Description
+            </h3>
+            <p id="detail-description"
+               style="font-size:var(--text-sm);color:var(--text-secondary);
+                      line-height:var(--leading-relaxed)"></p>
+          </div>
+
+          <!-- Deal + Dates Info -->
+          <div class="form-section">
+            <h3 class="form-section-title">
+              <span class="form-section-icon">💰</span>
+              Deal & Timeline
+            </h3>
+            <div class="lead-info-grid" id="deal-info-grid">
+              <!-- Populated by JS -->
+            </div>
+          </div>
+
+        </div>
+        <!-- ══ END LEFT COLUMN ══════════════════ -->
+
+        <!-- ══ RIGHT COLUMN — Notes Panel ══════ -->
+        <div class="notes-panel">
+
+          <div class="notes-panel-header">
+            <h3 class="notes-panel-title">
+              📝 Follow-up Notes
+              <span id="notes-count"
+                    style="font-size:var(--text-xs);
+                           color:var(--text-muted);
+                           font-weight:normal;
+                           margin-left:4px"></span>
+            </h3>
+          </div>
+
+          <!-- Add note form -->
+          <div class="note-form">
+            <textarea
+              id="note-text"
+              placeholder="Add a follow-up note, call summary, or next action..."
+              rows="3"
+            ></textarea>
+            <div class="note-form-row">
+              <input
+                type="date"
+                id="note-followup-date"
+                class="note-date-input"
+                title="Schedule follow-up date (optional)"
+              />
+              <button class="btn btn-primary btn-sm"
+                      id="add-note-btn"
+                      onclick="addNote()">
+                ➕ Add Note
+              </button>
+            </div>
+          </div>
+
+          <!-- Notes list -->
+          <div class="notes-list" id="notes-list">
+            <!-- Populated by JS -->
+          </div>
+
+        </div>
+        <!-- ══ END RIGHT COLUMN ═════════════════ -->
+
+      </div><!-- END lead-detail-grid -->
+    </div><!-- END page-content -->
+
+  </main>
+</div>
+
+<!-- Mobile overlay -->
+<div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+<!-- ══════════════════════════════════════════
+     DELETE CONFIRMATION MODAL
+     ══════════════════════════════════════════ -->
+<div class="modal-overlay hidden" id="delete-modal">
+  <div class="modal" style="max-width:420px">
+    <div class="delete-modal-icon">🗑️</div>
+    <div class="delete-modal-body">
+      <h3>Delete Lead</h3>
+      <p id="delete-modal-msg">
+        Are you sure you want to permanently delete this lead?
+        All notes will also be deleted. This cannot be undone.
+      </p>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary"
+              onclick="hideDeleteModal()">Cancel</button>
+      <button class="btn btn-danger"
+              id="confirm-delete-btn"
+              onclick="deleteLead()">🗑️ Delete</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast container -->
+<div id="toast-container"></div>
+
+<!-- Scripts -->
+<script src="js/utils.js"></script>
+<script src="js/lead-detail.js"></script>
+
+</body>
+</html>

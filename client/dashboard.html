@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mini CRM — Dashboard</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📊</text></svg>" />
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/dashboard.css" />
+</head>
+<body>
+
+<div class="app-layout" id="app-layout">
+
+  <!-- ═══════════════════════════════════════
+       SIDEBAR
+       ═══════════════════════════════════════ -->
+  <aside class="sidebar" id="sidebar">
+
+    <!-- Brand -->
+    <a href="/dashboard.html" class="sidebar-brand">
+      <div class="sidebar-brand-icon">📊</div>
+      <div class="sidebar-brand-text">
+        <span class="title">Mini CRM</span>
+        <span class="subtitle">Lead Manager</span>
+      </div>
+    </a>
+
+    <!-- Navigation -->
+    <nav class="sidebar-nav">
+
+      <span class="nav-section-label">Main</span>
+
+      <a href="/dashboard.html" class="nav-link active" id="nav-dashboard">
+        <span class="nav-link-icon">🏠</span>
+        <span class="nav-link-text">Dashboard</span>
+      </a>
+
+      <a href="/leads.html" class="nav-link" id="nav-leads">
+        <span class="nav-link-icon">👥</span>
+        <span class="nav-link-text">All Leads</span>
+        <span class="nav-badge" id="sidebar-lead-count">0</span>
+      </a>
+
+      <a href="/add-lead.html" class="nav-link" id="nav-add-lead">
+        <span class="nav-link-icon">➕</span>
+        <span class="nav-link-text">Add Lead</span>
+      </a>
+
+      <span class="nav-section-label">Pipeline</span>
+
+      <a href="/leads.html?status=New" class="nav-link">
+        <span class="nav-link-icon">🆕</span>
+        <span class="nav-link-text">New Leads</span>
+      </a>
+      <a href="/leads.html?status=Contacted" class="nav-link">
+        <span class="nav-link-icon">📞</span>
+        <span class="nav-link-text">Contacted</span>
+      </a>
+      <a href="/leads.html?status=Converted" class="nav-link">
+        <span class="nav-link-icon">✅</span>
+        <span class="nav-link-text">Converted</span>
+      </a>
+
+    </nav>
+
+    <!-- User footer -->
+    <div class="sidebar-footer">
+      <div class="sidebar-user">
+        <div class="avatar avatar-md" id="sidebar-avatar">A</div>
+        <div class="sidebar-user-info">
+          <div class="sidebar-user-name" id="sidebar-user-name">Admin</div>
+          <div class="sidebar-user-role" id="sidebar-user-role">Admin</div>
+        </div>
+        <button class="sidebar-logout" onclick="logout()" title="Logout">
+          🚪
+        </button>
+      </div>
+    </div>
+
+  </aside>
+
+  <!-- ═══════════════════════════════════════
+       TOPBAR
+       ═══════════════════════════════════════ -->
+  <header class="topbar">
+    <button class="sidebar-toggle" id="sidebar-toggle" aria-label="Toggle sidebar">
+      ☰
+    </button>
+    <span class="topbar-title">Dashboard</span>
+
+    <div class="topbar-actions">
+      <a href="/add-lead.html" class="btn btn-primary btn-sm">
+        ➕ New Lead
+      </a>
+      <button class="topbar-btn" onclick="logout()" title="Logout">
+        🚪
+      </button>
+    </div>
+  </header>
+
+  <!-- ═══════════════════════════════════════
+       MAIN CONTENT
+       ═══════════════════════════════════════ -->
+  <main class="main-content">
+
+    <!-- Page header -->
+    <div class="page-header">
+      <div class="page-header-left">
+        <h1>Dashboard</h1>
+        <p id="dashboard-greeting">Welcome back! Here's your pipeline overview.</p>
+      </div>
+      <div class="page-header-actions">
+        <button class="btn btn-secondary btn-sm" onclick="loadDashboard()">
+          🔄 Refresh
+        </button>
+        <a href="/add-lead.html" class="btn btn-primary btn-sm">
+          ➕ Add Lead
+        </a>
+      </div>
+    </div>
+
+    <!-- ── KPI Stat Cards ───────────────────── -->
+    <div class="stats-grid" id="stats-grid">
+      <!-- Populated by dashboard.js -->
+      <div class="stat-card accent-indigo skeleton" style="height:130px"></div>
+      <div class="stat-card accent-cyan skeleton"   style="height:130px"></div>
+      <div class="stat-card accent-green skeleton"  style="height:130px"></div>
+      <div class="stat-card accent-amber skeleton"  style="height:130px"></div>
+    </div>
+
+    <!-- ── Charts + Recent Leads ───────────────── -->
+    <div class="dashboard-grid">
+
+      <!-- Pipeline Status Chart -->
+      <div class="chart-card">
+        <div class="chart-card-header">
+          <h3 class="chart-card-title">Pipeline Overview</h3>
+          <a href="/leads.html" class="btn btn-secondary btn-sm">View All</a>
+        </div>
+        <!-- SVG donut chart — drawn by dashboard.js -->
+        <div class="donut-chart-wrapper" id="donut-wrapper">
+          <div class="skeleton" style="width:180px;height:180px;border-radius:50%;flex-shrink:0"></div>
+          <div style="flex:1;display:flex;flex-direction:column;gap:12px">
+            <div class="skeleton" style="height:20px;border-radius:6px"></div>
+            <div class="skeleton" style="height:20px;border-radius:6px"></div>
+            <div class="skeleton" style="height:20px;border-radius:6px"></div>
+            <div class="skeleton" style="height:20px;border-radius:6px"></div>
+            <div class="skeleton" style="height:20px;border-radius:6px"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Recent Leads Widget -->
+      <div class="recent-leads-card">
+        <div class="recent-leads-header">
+          <h3 class="recent-leads-title">Recent Leads</h3>
+          <a href="/leads.html" class="btn btn-secondary btn-sm">See All</a>
+        </div>
+        <!-- Populated by dashboard.js -->
+        <div id="recent-leads-list">
+          <!-- Skeleton rows -->
+          <div style="padding:16px 20px;border-bottom:1px solid var(--border)">
+            <div class="skeleton" style="height:16px;margin-bottom:8px;border-radius:4px"></div>
+            <div class="skeleton" style="height:12px;width:60%;border-radius:4px"></div>
+          </div>
+          <div style="padding:16px 20px;border-bottom:1px solid var(--border)">
+            <div class="skeleton" style="height:16px;margin-bottom:8px;border-radius:4px"></div>
+            <div class="skeleton" style="height:12px;width:50%;border-radius:4px"></div>
+          </div>
+          <div style="padding:16px 20px">
+            <div class="skeleton" style="height:16px;margin-bottom:8px;border-radius:4px"></div>
+            <div class="skeleton" style="height:12px;width:70%;border-radius:4px"></div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- END dashboard-grid -->
+
+    <!-- ── Status Breakdown Cards ──────────────── -->
+    <div class="card" style="margin-top:0">
+      <div class="card-header">
+        <h3 class="card-title">Status Breakdown</h3>
+        <span class="text-muted text-sm">Click any status to filter leads</span>
+      </div>
+      <div class="grid-4 gap-4" id="status-breakdown">
+        <!-- Populated by dashboard.js -->
+        <div class="skeleton" style="height:80px;border-radius:10px"></div>
+        <div class="skeleton" style="height:80px;border-radius:10px"></div>
+        <div class="skeleton" style="height:80px;border-radius:10px"></div>
+        <div class="skeleton" style="height:80px;border-radius:10px"></div>
+      </div>
+    </div>
+
+  </main><!-- END main-content -->
+
+</div><!-- END app-layout -->
+
+<!-- Mobile sidebar overlay -->
+<div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+<!-- Toast container -->
+<div id="toast-container"></div>
+
+<!-- Scripts -->
+<script src="js/utils.js"></script>
+<script src="js/dashboard.js"></script>
+
+</body>
+</html>

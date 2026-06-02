@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mini CRM — Login</title>
+
+  <!-- Favicon -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📊</text></svg>" />
+
+  <!-- Global design system first, then page-specific styles -->
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/auth.css" />
+</head>
+<body>
+
+<!-- =====================================================
+     AUTH PAGE — Split Screen Layout
+     Left: Brand Panel | Right: Form Panel
+     ===================================================== -->
+<div class="auth-page">
+
+  <!-- ══════════════════════════════════════════════
+       LEFT PANEL — Branding
+       ══════════════════════════════════════════════ -->
+  <div class="auth-brand-panel">
+
+    <!-- Decorative grid pattern overlay -->
+    <div class="grid-pattern"></div>
+
+    <!-- Logo -->
+    <div class="brand-logo">
+      <div class="brand-logo-icon">📊</div>
+      <div class="brand-logo-text">
+        <span class="name">Mini CRM</span>
+        <span class="tagline">Lead Management System</span>
+      </div>
+    </div>
+
+    <!-- Feature highlights -->
+    <div class="brand-features">
+
+      <div class="brand-feature">
+        <div class="brand-feature-icon purple">🎯</div>
+        <div class="brand-feature-text">
+          <h4>Lead Tracking</h4>
+          <p>Manage your entire sales pipeline in one place</p>
+        </div>
+      </div>
+
+      <div class="brand-feature">
+        <div class="brand-feature-icon cyan">📈</div>
+        <div class="brand-feature-text">
+          <h4>Smart Dashboard</h4>
+          <p>Real-time stats and visual pipeline overview</p>
+        </div>
+      </div>
+
+      <div class="brand-feature">
+        <div class="brand-feature-icon green">📝</div>
+        <div class="brand-feature-text">
+          <h4>Follow-up Notes</h4>
+          <p>Log every interaction with scheduled reminders</p>
+        </div>
+      </div>
+
+      <div class="brand-feature">
+        <div class="brand-feature-icon amber">🔒</div>
+        <div class="brand-feature-text">
+          <h4>Secure & Protected</h4>
+          <p>JWT authentication with bcrypt password hashing</p>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Stats row -->
+    <div class="brand-stats">
+      <div class="brand-stat">
+        <span class="brand-stat-value">∞</span>
+        <span class="brand-stat-label">Leads</span>
+      </div>
+      <div class="brand-stat">
+        <span class="brand-stat-value">5</span>
+        <span class="brand-stat-label">Statuses</span>
+      </div>
+      <div class="brand-stat">
+        <span class="brand-stat-value">24/7</span>
+        <span class="brand-stat-label">Access</span>
+      </div>
+    </div>
+
+  </div>
+  <!-- END LEFT PANEL -->
+
+
+  <!-- ══════════════════════════════════════════════
+       RIGHT PANEL — Forms
+       ══════════════════════════════════════════════ -->
+  <div class="auth-form-panel">
+    <div class="auth-form-container">
+
+      <!-- Form panel heading -->
+      <div class="auth-form-header">
+        <h1>Welcome back 👋</h1>
+        <p>Sign in to your CRM dashboard or create an admin account.</p>
+      </div>
+
+      <!-- Tab switcher: Login | Register -->
+      <div class="auth-tabs" role="tablist">
+        <button
+          class="auth-tab active"
+          id="tab-login"
+          role="tab"
+          aria-selected="true"
+          aria-controls="panel-login"
+          onclick="switchTab('login')"
+        >
+          Sign In
+        </button>
+        <button
+          class="auth-tab"
+          id="tab-register"
+          role="tab"
+          aria-selected="false"
+          aria-controls="panel-register"
+          onclick="switchTab('register')"
+        >
+          Register
+        </button>
+      </div>
+
+      <!-- ──────────────────────────────────────────
+           LOGIN PANEL
+           ────────────────────────────────────────── -->
+      <div class="auth-panel active" id="panel-login" role="tabpanel">
+
+        <!-- Error / success messages -->
+        <div class="auth-error" id="login-error">
+          <span>⚠️</span>
+          <span id="login-error-text">Invalid email or password.</span>
+        </div>
+        <div class="auth-success" id="login-success">
+          <span>✅</span>
+          <span>Login successful! Redirecting...</span>
+        </div>
+
+        <!-- Login form -->
+        <form class="auth-form" id="login-form" novalidate>
+
+          <!-- Email -->
+          <div class="form-group">
+            <label class="form-label" for="login-email">
+              Email address <span class="required">*</span>
+            </label>
+            <div class="input-wrapper">
+              <span class="input-icon">✉️</span>
+              <input
+                type="email"
+                id="login-email"
+                name="email"
+                class="form-input"
+                placeholder="admin@example.com"
+                autocomplete="email"
+                required
+              />
+            </div>
+          </div>
+
+          <!-- Password -->
+          <div class="form-group">
+            <label class="form-label" for="login-password">
+              Password <span class="required">*</span>
+            </label>
+            <div class="password-wrapper">
+              <input
+                type="password"
+                id="login-password"
+                name="password"
+                class="form-input"
+                placeholder="Enter your password"
+                autocomplete="current-password"
+                required
+              />
+              <!-- Toggle password visibility -->
+              <button
+                type="button"
+                class="password-toggle"
+                onclick="togglePassword('login-password', this)"
+                aria-label="Toggle password visibility"
+              >
+                👁️
+              </button>
+            </div>
+          </div>
+
+          <!-- Remember me + Forgot password -->
+          <div class="auth-form-options">
+            <label>
+              <input type="checkbox" id="remember-me" />
+              Remember me
+            </label>
+            <a href="#" class="forgot-link">Forgot password?</a>
+          </div>
+
+          <!-- Submit -->
+          <button
+            type="submit"
+            class="btn btn-primary auth-submit-btn"
+            id="login-btn"
+          >
+            Sign In →
+          </button>
+
+        </form><!-- END login-form -->
+
+        <!-- Footer note -->
+        <p class="auth-footer-note">
+          Don't have an account?
+          <a href="#" onclick="switchTab('register'); return false;">
+            Create one here
+          </a>
+        </p>
+
+      </div>
+      <!-- END LOGIN PANEL -->
+
+
+      <!-- ──────────────────────────────────────────
+           REGISTER PANEL
+           ────────────────────────────────────────── -->
+      <div class="auth-panel" id="panel-register" role="tabpanel">
+
+        <!-- Setup key info box -->
+        <div class="setup-key-info">
+          <span class="setup-key-info-icon">⚠️</span>
+          <span>
+            Registration requires an <strong>Admin Setup Key</strong>
+            defined in your <code>.env</code> file as
+            <code>ADMIN_SETUP_KEY</code>. This prevents
+            unauthorized admin account creation.
+          </span>
+        </div>
+
+        <!-- Error / success messages -->
+        <div class="auth-error" id="register-error">
+          <span>⚠️</span>
+          <span id="register-error-text">Registration failed.</span>
+        </div>
+        <div class="auth-success" id="register-success">
+          <span>✅</span>
+          <span>Admin registered! Redirecting to dashboard...</span>
+        </div>
+
+        <!-- Register form -->
+        <form class="auth-form" id="register-form" novalidate>
+
+          <!-- Full Name -->
+          <div class="form-group">
+            <label class="form-label" for="register-name">
+              Full Name <span class="required">*</span>
+            </label>
+            <div class="input-wrapper">
+              <span class="input-icon">👤</span>
+              <input
+                type="text"
+                id="register-name"
+                name="name"
+                class="form-input"
+                placeholder="Your full name"
+                autocomplete="name"
+                required
+              />
+            </div>
+          </div>
+
+          <!-- Email -->
+          <div class="form-group">
+            <label class="form-label" for="register-email">
+              Email address <span class="required">*</span>
+            </label>
+            <div class="input-wrapper">
+              <span class="input-icon">✉️</span>
+              <input
+                type="email"
+                id="register-email"
+                name="email"
+                class="form-input"
+                placeholder="admin@example.com"
+                autocomplete="email"
+                required
+              />
+            </div>
+          </div>
+
+          <!-- Password -->
+          <div class="form-group">
+            <label class="form-label" for="register-password">
+              Password <span class="required">*</span>
+            </label>
+            <div class="password-wrapper">
+              <input
+                type="password"
+                id="register-password"
+                name="password"
+                class="form-input"
+                placeholder="Minimum 6 characters"
+                autocomplete="new-password"
+                required
+              />
+              <button
+                type="button"
+                class="password-toggle"
+                onclick="togglePassword('register-password', this)"
+                aria-label="Toggle password visibility"
+              >
+                👁️
+              </button>
+            </div>
+          </div>
+
+          <!-- Admin Setup Key -->
+          <div class="form-group">
+            <label class="form-label" for="register-setup-key">
+              Admin Setup Key <span class="required">*</span>
+            </label>
+            <div class="password-wrapper">
+              <input
+                type="password"
+                id="register-setup-key"
+                name="setupKey"
+                class="form-input"
+                placeholder="Enter the setup key from .env"
+                required
+              />
+              <button
+                type="button"
+                class="password-toggle"
+                onclick="togglePassword('register-setup-key', this)"
+                aria-label="Toggle key visibility"
+              >
+                👁️
+              </button>
+            </div>
+          </div>
+
+          <!-- Submit -->
+          <button
+            type="submit"
+            class="btn btn-primary auth-submit-btn"
+            id="register-btn"
+          >
+            Create Admin Account →
+          </button>
+
+        </form><!-- END register-form -->
+
+        <!-- Footer note -->
+        <p class="auth-footer-note">
+          Already have an account?
+          <a href="#" onclick="switchTab('login'); return false;">
+            Sign in here
+          </a>
+        </p>
+
+      </div>
+      <!-- END REGISTER PANEL -->
+
+    </div><!-- END auth-form-container -->
+  </div>
+  <!-- END RIGHT PANEL -->
+
+</div>
+<!-- END AUTH PAGE -->
+
+
+<!-- Toast container for notifications -->
+<div id="toast-container"></div>
+
+
+<!-- =====================================================
+     SCRIPTS
+     Load utils first (shared helpers + API config)
+     Then auth.js (login/register logic)
+     ===================================================== -->
+<script src="js/utils.js"></script>
+<script src="js/auth.js"></script>
+
+<!-- Inline: tab switcher + password toggle
+     (tiny helpers that don't need a separate file) -->
+<script>
+  // ── Tab Switcher ────────────────────────────────
+  // Shows login or register panel based on clicked tab
+  function switchTab(tab) {
+    // Update tab button states
+    document.getElementById('tab-login').classList
+      .toggle('active', tab === 'login');
+    document.getElementById('tab-register').classList
+      .toggle('active', tab === 'register');
+
+    // Update aria-selected for accessibility
+    document.getElementById('tab-login')
+      .setAttribute('aria-selected', tab === 'login');
+    document.getElementById('tab-register')
+      .setAttribute('aria-selected', tab === 'register');
+
+    // Show/hide panels
+    document.getElementById('panel-login').classList
+      .toggle('active', tab === 'login');
+    document.getElementById('panel-register').classList
+      .toggle('active', tab === 'register');
+
+    // Clear any error/success messages when switching
+    clearAuthMessages();
+  }
+
+  // ── Password Toggle ─────────────────────────────
+  // Switches input type between password and text
+  function togglePassword(inputId, btn) {
+    const input = document.getElementById(inputId);
+    const isHidden = input.type === 'password';
+    input.type = isHidden ? 'text' : 'password';
+    btn.textContent = isHidden ? '🙈' : '👁️';
+  }
+
+  // ── Clear Auth Messages ──────────────────────────
+  // Removes error/success alerts on tab switch
+  function clearAuthMessages() {
+    ['login-error', 'login-success',
+     'register-error', 'register-success'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.classList.remove('visible');
+    });
+  }
+</script>
+
+</body>
+</html>

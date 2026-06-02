@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mini CRM — Add Lead</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📊</text></svg>" />
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/dashboard.css" />
+</head>
+<body>
+
+<div class="app-layout" id="app-layout">
+
+  <!-- ═══════════════════════════════════════
+       SIDEBAR
+       ═══════════════════════════════════════ -->
+  <aside class="sidebar" id="sidebar">
+    <a href="/dashboard.html" class="sidebar-brand">
+      <div class="sidebar-brand-icon">📊</div>
+      <div class="sidebar-brand-text">
+        <span class="title">Mini CRM</span>
+        <span class="subtitle">Lead Manager</span>
+      </div>
+    </a>
+
+    <nav class="sidebar-nav">
+      <span class="nav-section-label">Main</span>
+      <a href="/dashboard.html" class="nav-link">
+        <span class="nav-link-icon">🏠</span>
+        <span class="nav-link-text">Dashboard</span>
+      </a>
+      <a href="/leads.html" class="nav-link">
+        <span class="nav-link-icon">👥</span>
+        <span class="nav-link-text">All Leads</span>
+        <span class="nav-badge" id="sidebar-lead-count">—</span>
+      </a>
+      <a href="/add-lead.html" class="nav-link active">
+        <span class="nav-link-icon">➕</span>
+        <span class="nav-link-text">Add Lead</span>
+      </a>
+
+      <span class="nav-section-label">Pipeline</span>
+      <a href="/leads.html?status=New" class="nav-link">
+        <span class="nav-link-icon">🆕</span>
+        <span class="nav-link-text">New Leads</span>
+      </a>
+      <a href="/leads.html?status=Contacted" class="nav-link">
+        <span class="nav-link-icon">📞</span>
+        <span class="nav-link-text">Contacted</span>
+      </a>
+      <a href="/leads.html?status=Converted" class="nav-link">
+        <span class="nav-link-icon">✅</span>
+        <span class="nav-link-text">Converted</span>
+      </a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="sidebar-user">
+        <div class="avatar avatar-md" id="sidebar-avatar">A</div>
+        <div class="sidebar-user-info">
+          <div class="sidebar-user-name" id="sidebar-user-name">Admin</div>
+          <div class="sidebar-user-role" id="sidebar-user-role">Admin</div>
+        </div>
+        <button class="sidebar-logout" onclick="logout()" title="Logout">🚪</button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ═══════════════════════════════════════
+       TOPBAR
+       ═══════════════════════════════════════ -->
+  <header class="topbar">
+    <button class="sidebar-toggle" id="sidebar-toggle" aria-label="Toggle sidebar">☰</button>
+    <!-- Title updates dynamically: "Add Lead" or "Edit Lead" -->
+    <span class="topbar-title" id="page-topbar-title">Add Lead</span>
+    <div class="topbar-actions">
+      <a href="/leads.html" class="btn btn-secondary btn-sm">← Back to Leads</a>
+      <button class="topbar-btn" onclick="logout()" title="Logout">🚪</button>
+    </div>
+  </header>
+
+  <!-- ═══════════════════════════════════════
+       MAIN CONTENT
+       ═══════════════════════════════════════ -->
+  <main class="main-content">
+
+    <!-- Page header -->
+    <div class="page-header">
+      <div class="page-header-left">
+        <!-- Dynamically updated by JS -->
+        <h1 id="page-title">Add New Lead</h1>
+        <p id="page-subtitle">Fill in the details below to add a new lead to your pipeline.</p>
+      </div>
+      <div class="page-header-actions">
+        <a href="/leads.html" class="btn btn-secondary btn-sm">← Cancel</a>
+      </div>
+    </div>
+
+    <!-- ── Loading skeleton (shown while fetching edit data) ── -->
+    <div id="form-loading" class="hidden">
+      <div class="form-page-container">
+        <div class="form-section">
+          <div class="skeleton" style="height:24px;width:200px;margin-bottom:24px;border-radius:6px"></div>
+          <div class="form-grid-2">
+            <div class="skeleton" style="height:50px;border-radius:10px"></div>
+            <div class="skeleton" style="height:50px;border-radius:10px"></div>
+            <div class="skeleton" style="height:50px;border-radius:10px"></div>
+            <div class="skeleton" style="height:50px;border-radius:10px"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Main Form ──────────────────────────────── -->
+    <form id="lead-form" class="form-page-container" novalidate>
+
+      <!-- ── SECTION 1: Personal Information ──── -->
+      <div class="form-section">
+        <h3 class="form-section-title">
+          <span class="form-section-icon">👤</span>
+          Personal Information
+        </h3>
+
+        <div class="form-grid-2">
+
+          <!-- Full Name -->
+          <div class="form-group">
+            <label class="form-label" for="lead-name">
+              Full Name <span class="required">*</span>
+            </label>
+            <input
+              type="text"
+              id="lead-name"
+              name="name"
+              class="form-input"
+              placeholder="e.g. John Smith"
+              required
+            />
+          </div>
+
+          <!-- Email -->
+          <div class="form-group">
+            <label class="form-label" for="lead-email">
+              Email Address <span class="required">*</span>
+            </label>
+            <input
+              type="email"
+              id="lead-email"
+              name="email"
+              class="form-input"
+              placeholder="e.g. john@company.com"
+              required
+            />
+          </div>
+
+          <!-- Phone -->
+          <div class="form-group">
+            <label class="form-label" for="lead-phone">Phone Number</label>
+            <input
+              type="tel"
+              id="lead-phone"
+              name="phone"
+              class="form-input"
+              placeholder="e.g. +1 555-0101"
+            />
+          </div>
+
+          <!-- Company -->
+          <div class="form-group">
+            <label class="form-label" for="lead-company">Company</label>
+            <input
+              type="text"
+              id="lead-company"
+              name="company"
+              class="form-input"
+              placeholder="e.g. Acme Corporation"
+            />
+          </div>
+
+          <!-- Position — full width -->
+          <div class="form-group col-span-2">
+            <label class="form-label" for="lead-position">Job Title / Position</label>
+            <input
+              type="text"
+              id="lead-position"
+              name="position"
+              class="form-input"
+              placeholder="e.g. Chief Technology Officer"
+            />
+          </div>
+
+        </div>
+      </div>
+
+      <!-- ── SECTION 2: Lead Details ────────── -->
+      <div class="form-section">
+        <h3 class="form-section-title">
+          <span class="form-section-icon">📋</span>
+          Lead Details
+        </h3>
+
+        <div class="form-grid-2">
+
+          <!-- Status -->
+          <div class="form-group">
+            <label class="form-label" for="lead-status">Status</label>
+            <select id="lead-status" name="status" class="form-select">
+              <option value="New">🆕 New</option>
+              <option value="Contacted">📞 Contacted</option>
+              <option value="Qualified">⭐ Qualified</option>
+              <option value="Converted">✅ Converted</option>
+              <option value="Lost">❌ Lost</option>
+            </select>
+          </div>
+
+          <!-- Priority -->
+          <div class="form-group">
+            <label class="form-label" for="lead-priority">Priority</label>
+            <select id="lead-priority" name="priority" class="form-select">
+              <option value="Medium" selected>🟡 Medium</option>
+              <option value="High">🔴 High</option>
+              <option value="Low">🟢 Low</option>
+            </select>
+          </div>
+
+          <!-- Source -->
+          <div class="form-group">
+            <label class="form-label" for="lead-source">Lead Source</label>
+            <select id="lead-source" name="source" class="form-select">
+              <option value="Other" selected>Other</option>
+              <option value="Website">🌐 Website</option>
+              <option value="Referral">🤝 Referral</option>
+              <option value="Social Media">📱 Social Media</option>
+              <option value="Email Campaign">📧 Email Campaign</option>
+              <option value="Cold Call">📞 Cold Call</option>
+            </select>
+          </div>
+
+          <!-- Next Follow-up Date -->
+          <div class="form-group">
+            <label class="form-label" for="lead-followup">Next Follow-up Date</label>
+            <input
+              type="date"
+              id="lead-followup"
+              name="nextFollowUpAt"
+              class="form-input"
+            />
+          </div>
+
+          <!-- Description — full width -->
+          <div class="form-group col-span-2">
+            <label class="form-label" for="lead-description">
+              Description / Notes
+            </label>
+            <textarea
+              id="lead-description"
+              name="description"
+              class="form-textarea"
+              placeholder="Brief description about this lead, their needs, or context..."
+              rows="4"
+            ></textarea>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- ── SECTION 3: Deal Information ───── -->
+      <div class="form-section">
+        <h3 class="form-section-title">
+          <span class="form-section-icon">💰</span>
+          Deal Information
+        </h3>
+
+        <div class="form-grid-2">
+
+          <!-- Deal Value -->
+          <div class="form-group">
+            <label class="form-label" for="lead-deal-value">
+              Estimated Deal Value (USD)
+            </label>
+            <div class="input-wrapper">
+              <span class="input-icon"
+                    style="font-size:0.85rem;font-weight:600;
+                           color:var(--text-secondary)">$</span>
+              <input
+                type="number"
+                id="lead-deal-value"
+                name="dealValue"
+                class="form-input"
+                placeholder="0"
+                min="0"
+                step="100"
+              />
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- ── FORM ERROR ALERT ─────────────────── -->
+      <div class="alert alert-error hidden" id="form-error">
+        <span>⚠️</span>
+        <span id="form-error-text">Please fix the errors above.</span>
+      </div>
+
+      <!-- ── STICKY FORM ACTIONS ─────────────────── -->
+      <div class="form-actions">
+        <a href="/leads.html" class="btn btn-secondary">
+          Cancel
+        </a>
+        <button type="button"
+                class="btn btn-secondary"
+                id="reset-btn"
+                onclick="resetForm()">
+          🔄 Reset
+        </button>
+        <button type="submit"
+                class="btn btn-primary"
+                id="submit-btn">
+          💾 Save Lead
+        </button>
+      </div>
+
+    </form><!-- END lead-form -->
+
+  </main>
+</div>
+
+<!-- Mobile overlay -->
+<div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+<!-- Toast container -->
+<div id="toast-container"></div>
+
+<!-- Scripts -->
+<script src="js/utils.js"></script>
+<script src="js/add-lead.js"></script>
+
+</body>
+</html>
